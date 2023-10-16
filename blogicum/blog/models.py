@@ -3,19 +3,19 @@ from django.db import models
 
 User = get_user_model()
 
-MAX_LENGHT = 30
+MAX_LENGTH = 30
 
 
 class BaseModel(models.Model):
     """Абстрактная модель. Добавляет флаг is_published и дату публикации."""
-    is_published = (
-        models.BooleanField(
-            default=True,
-            verbose_name='Опубликовано',
-            help_text='Снимите галочку, чтобы скрыть публикацию.')
-            )
-    created_at = models.DateTimeField(auto_now_add=True,
-                                      verbose_name='Добавлено')
+    is_published = models.BooleanField(
+        default=True,
+        verbose_name='Опубликовано',
+        help_text='Снимите галочку, чтобы скрыть публикацию.'
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True, verbose_name='Добавлено'
+    )
 
     class Meta:
         abstract = True
@@ -29,7 +29,7 @@ class Location(BaseModel):
         verbose_name_plural = 'Местоположения'
 
     def __str__(self):
-        return f'{self.name[:MAX_LENGHT]}'
+        return f'{self.name[:MAX_LENGTH]}'
 
 
 class Category(BaseModel):
@@ -40,14 +40,14 @@ class Category(BaseModel):
         verbose_name='Идентификатор',
         help_text='Идентификатор страницы для URL; '
                   'разрешены символы латиницы, цифры, дефис и подчёркивание.'
-        )
+    )
 
     class Meta:
         verbose_name = 'категория'
         verbose_name_plural = 'Категории'
 
     def __str__(self):
-        return f'{self.title[:MAX_LENGHT]}'
+        return f'{self.title[:MAX_LENGTH]}'
 
 
 class Post(BaseModel):
@@ -57,7 +57,7 @@ class Post(BaseModel):
         verbose_name='Дата и время публикации',
         help_text='Если установить дату и время в будущем — '
                   'можно делать отложенные публикации.'
-        )
+    )
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -81,7 +81,8 @@ class Post(BaseModel):
     image = models.ImageField(
         'Изображение',
         upload_to='posts_images',
-        blank=True)
+        blank=True
+    )
 
     class Meta:
         verbose_name = 'публикация'
@@ -89,7 +90,7 @@ class Post(BaseModel):
         ordering = ['-pub_date']
 
     def __str__(self):
-        return f'{self.title[:MAX_LENGHT]}'
+        return f'{self.title[:MAX_LENGTH]}'
 
 
 class Comment(models.Model):
@@ -100,11 +101,12 @@ class Comment(models.Model):
         related_name='comment',
         verbose_name='публикация'
     )
-    created_at = models.DateTimeField(auto_now_add=True,
-                                      verbose_name='Добавлено')
-    author = models.ForeignKey(User,
-                               on_delete=models.CASCADE,
-                               verbose_name='Автор комментария')
+    created_at = models.DateTimeField(
+        auto_now_add=True, verbose_name='Добавлено'
+    )
+    author = models.ForeignKey(
+        User, on_delete=models.CASCADE, verbose_name='Автор комментария'
+    )
 
     class Meta:
         verbose_name = 'Комментарий'
