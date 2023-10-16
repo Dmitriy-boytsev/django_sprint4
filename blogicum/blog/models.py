@@ -1,7 +1,9 @@
-from django.db import models
 from django.contrib.auth import get_user_model
+from django.db import models
 
 User = get_user_model()
+
+MAX_LENGHT = 30
 
 
 class BaseModel(models.Model):
@@ -10,7 +12,8 @@ class BaseModel(models.Model):
         models.BooleanField(
             default=True,
             verbose_name='Опубликовано',
-            help_text='Снимите галочку, чтобы скрыть публикацию.'))
+            help_text='Снимите галочку, чтобы скрыть публикацию.')
+            )
     created_at = models.DateTimeField(auto_now_add=True,
                                       verbose_name='Добавлено')
 
@@ -26,7 +29,7 @@ class Location(BaseModel):
         verbose_name_plural = 'Местоположения'
 
     def __str__(self):
-        return self.name
+        return f'{self.name[:MAX_LENGHT]}'
 
 
 class Category(BaseModel):
@@ -36,14 +39,15 @@ class Category(BaseModel):
         unique=True,
         verbose_name='Идентификатор',
         help_text='Идентификатор страницы для URL; '
-                  'разрешены символы латиницы, цифры, дефис и подчёркивание.')
+                  'разрешены символы латиницы, цифры, дефис и подчёркивание.'
+        )
 
     class Meta:
         verbose_name = 'категория'
         verbose_name_plural = 'Категории'
 
     def __str__(self):
-        return self.title
+        return f'{self.title[:MAX_LENGHT]}'
 
 
 class Post(BaseModel):
@@ -52,7 +56,8 @@ class Post(BaseModel):
     pub_date = models.DateTimeField(
         verbose_name='Дата и время публикации',
         help_text='Если установить дату и время в будущем — '
-                  'можно делать отложенные публикации.')
+                  'можно делать отложенные публикации.'
+        )
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -63,7 +68,7 @@ class Post(BaseModel):
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        related_name='post',
+        related_name='posts',
         verbose_name='Местоположение'
     )
     category = models.ForeignKey(
@@ -84,7 +89,7 @@ class Post(BaseModel):
         ordering = ['-pub_date']
 
     def __str__(self):
-        return self.title
+        return f'{self.title[:MAX_LENGHT]}'
 
 
 class Comment(models.Model):
