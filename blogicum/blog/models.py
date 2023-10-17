@@ -29,7 +29,7 @@ class Location(BaseModel):
         verbose_name_plural = 'Местоположения'
 
     def __str__(self):
-        return f'{self.name[:MAX_LENGTH]}'
+        return self.name[:MAX_LENGTH]
 
 
 class Category(BaseModel):
@@ -47,7 +47,7 @@ class Category(BaseModel):
         verbose_name_plural = 'Категории'
 
     def __str__(self):
-        return f'{self.title[:MAX_LENGTH]}'
+        return self.title[:MAX_LENGTH]
 
 
 class Post(BaseModel):
@@ -90,7 +90,7 @@ class Post(BaseModel):
         ordering = ['-pub_date']
 
     def __str__(self):
-        return f'{self.title[:MAX_LENGTH]}'
+        return self.title[:MAX_LENGTH]
 
 
 class Comment(models.Model):
@@ -114,4 +114,6 @@ class Comment(models.Model):
         ordering = ('created_at',)
 
     def __str__(self):
-        return f"Комментарий пользователя {self.author}"
+        return (
+        f'Комментарий к посту {self.post.title} от пользователя {self.author.username}: {self.text[:50]}'
+        )
