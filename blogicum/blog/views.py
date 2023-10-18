@@ -140,8 +140,8 @@ class CategoryPostsListView(PostMixin, ListView):
 
     def get_queryset(self):
         category = get_object_or_404(
-            Category, 
-            slug=self.kwargs['category_slug'], 
+            Category,
+            slug=self.kwargs['category_slug'],
             is_published=True
         )
         queryset = super().get_queryset().filter(category=category,)
