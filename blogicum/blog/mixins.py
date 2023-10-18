@@ -14,7 +14,9 @@ class PostMixin:
 
     def get_queryset(self):
         return (
-            self.model.objects.select_related('location', 'author', 'category')
+            self.model.objects.select_related(
+                'location', 'author', 'category'
+            )
             .filter(is_published=True,
                     category__is_published=True,
                     pub_date__lte=timezone.now())
@@ -25,7 +27,9 @@ class PostMixin:
 class DispatchNeededMixin:
     def dispatch(self, request, *args, **kwargs):
         if self.get_object().author != request.user:
-            return redirect('blog:post_detail', id=self.kwargs['post_id'])
+            return redirect(
+                'blog:post_detail', id=self.kwargs['post_id']
+            )
         return super().dispatch(request, *args, **kwargs)
 
 
@@ -44,4 +48,6 @@ class CommentMixin(View):
         return super().dispatch(request, *args, **kwargs)
 
     def get_success_url(self):
-        return reverse("blog:post_detail", kwargs={'id': self.kwargs['post_id']})
+        return reverse(
+            "blog:post_detail", kwargs={'id': self.kwargs['post_id']}
+        )
