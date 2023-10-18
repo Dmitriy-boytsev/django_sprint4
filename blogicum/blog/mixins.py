@@ -22,7 +22,6 @@ class PostMixin:
             .order_by("-pub_date"))
 
 
-
 class DispatchNeededMixin:
     def dispatch(self, request, *args, **kwargs):
         if self.get_object().author != request.user:
@@ -45,5 +44,4 @@ class CommentMixin(View):
         return super().dispatch(request, *args, **kwargs)
 
     def get_success_url(self):
-        return reverse("blog:post_detail",
-                       kwargs={'id': self.kwargs['post_id']})
+        return reverse("blog:post_detail", kwargs={'id': self.kwargs['post_id']})

@@ -33,16 +33,22 @@ class PostCreateView(LoginRequiredMixin, CreateView):
         return reverse("blog:profile", args=[self.request.user])
 
 
-class PostUpdateView(LoginRequiredMixin, DispatchNeededMixin, PostMixin, UpdateView):
+class PostUpdateView(
+    LoginRequiredMixin, DispatchNeededMixin, PostMixin, UpdateView
+):
     template_name = 'blog/create.html'
     form_class = PostForm
     pk_url_kwarg = 'post_id'
 
     def get_success_url(self):
-        return reverse('blog:post_detail', kwargs={'id': self.kwargs['post_id']})
+        return reverse(
+            'blog:post_detail', kwargs={'id': self.kwargs['post_id']}
+        )
 
 
-class PostDeleteView(LoginRequiredMixin, DispatchNeededMixin, PostMixin, DeleteView):
+class PostDeleteView(
+    LoginRequiredMixin, DispatchNeededMixin, PostMixin, DeleteView
+):
     template_name = 'blog/create.html'
     pk_url_kwarg = 'post_id'
 
@@ -52,7 +58,9 @@ class PostDeleteView(LoginRequiredMixin, DispatchNeededMixin, PostMixin, DeleteV
         return context
 
     def get_success_url(self):
-        return reverse("blog:profile", kwargs={"username": self.request.user})
+        return reverse(
+            "blog:profile", kwargs={"username": self.request.user}
+        )
 
 
 class IndexListView(PostMixin, ListView):
@@ -66,7 +74,9 @@ class ProfileListView(ListView):
     user = None
 
     def get_queryset(self):
-        user = get_object_or_404(User, username=self.kwargs['username'])
+        user = get_object_or_404(
+            User, username=self.kwargs['username']
+        )
         if self.request.user == user:
             return (
                 self.model.objects.select_related('author')
@@ -130,7 +140,9 @@ class CategoryPostsListView(PostMixin, ListView):
 
     def get_queryset(self):
         category = get_object_or_404(
-            Category, slug=self.kwargs['category_slug'], is_published=True
+            Category, 
+            slug=self.kwargs['category_slug'], 
+            is_published=True
         )
         queryset = super().get_queryset().filter(category=category,)
         return queryset
@@ -161,7 +173,9 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse("blog:post_detail", kwargs={'id': self.kwargs['post_id']})
+        return reverse(
+            "blog:post_detail", kwargs={'id': self.kwargs['post_id']}
+        )
 
 
 class CommentUpdateView(CommentMixin, UpdateView):
@@ -170,3 +184,4 @@ class CommentUpdateView(CommentMixin, UpdateView):
 
 class CommentDeleteView(CommentMixin, DeleteView):
     pass
+
